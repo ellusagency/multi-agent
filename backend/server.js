@@ -31,7 +31,16 @@ const palavrasChave = {
 function classificarPedido(pedido) {
   const pedidoLower = pedido.toLowerCase();
   
-  // Verifica dados externos
+  // Palavras que indicam pergunta informacional
+  const palavrasPergunta = ['qual', 'quais', 'quando', 'como', 'por que', 'porque', 'onde', 'quem', 'o que'];
+  const ehPergunta = palavrasPergunta.some(palavra => pedidoLower.startsWith(palavra));
+  
+  // Se é uma pergunta E não tem palavra explícita de API, é informacional
+  if (ehPergunta && !pedidoLower.includes('api') && !pedidoLower.includes('endpoint')) {
+    return { tipo: 'informacional', subtipo: null };
+  }
+  
+  // Verifica dados externos (com palavras explícitas)
   if (palavrasChave.dados_externos.some(palavra => pedidoLower.includes(palavra))) {
     return { tipo: 'dados_externos', subtipo: null };
   }
