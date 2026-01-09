@@ -31,32 +31,38 @@ const palavrasChave = {
 function classificarPedido(pedido) {
   const pedidoLower = pedido.toLowerCase();
   
+  // Função auxiliar para verificar se uma palavra existe como palavra completa
+  const contemPalavra = (texto, palavra) => {
+    const regex = new RegExp(`\\b${palavra}\\b`, 'i');
+    return regex.test(texto);
+  };
+  
   // Palavras que indicam pergunta informacional
   const palavrasPergunta = ['qual', 'quais', 'quando', 'como', 'por que', 'porque', 'onde', 'quem', 'o que'];
   const ehPergunta = palavrasPergunta.some(palavra => pedidoLower.startsWith(palavra));
   
   // Se é uma pergunta E não tem palavra explícita de API, é informacional
-  if (ehPergunta && !pedidoLower.includes('api') && !pedidoLower.includes('endpoint')) {
+  if (ehPergunta && !contemPalavra(pedidoLower, 'api') && !contemPalavra(pedidoLower, 'endpoint')) {
     return { tipo: 'informacional', subtipo: null };
   }
   
-  // Verifica dados externos (com palavras explícitas)
-  if (palavrasChave.dados_externos.some(palavra => pedidoLower.includes(palavra))) {
+  // Verifica dados externos (com palavras completas)
+  if (palavrasChave.dados_externos.some(palavra => contemPalavra(pedidoLower, palavra))) {
     return { tipo: 'dados_externos', subtipo: null };
   }
   
-  // Verifica criativo - imagem
-  if (palavrasChave.criativo_imagem.some(palavra => pedidoLower.includes(palavra))) {
+  // Verifica criativo - imagem (com palavras completas)
+  if (palavrasChave.criativo_imagem.some(palavra => contemPalavra(pedidoLower, palavra))) {
     return { tipo: 'criativo', subtipo: 'imagem' };
   }
   
-  // Verifica criativo - documento
-  if (palavrasChave.criativo_documento.some(palavra => pedidoLower.includes(palavra))) {
+  // Verifica criativo - documento (com palavras completas)
+  if (palavrasChave.criativo_documento.some(palavra => contemPalavra(pedidoLower, palavra))) {
     return { tipo: 'criativo', subtipo: 'documento' };
   }
   
-  // Verifica criativo - texto
-  if (palavrasChave.criativo_texto.some(palavra => pedidoLower.includes(palavra))) {
+  // Verifica criativo - texto (com palavras completas)
+  if (palavrasChave.criativo_texto.some(palavra => contemPalavra(pedidoLower, palavra))) {
     return { tipo: 'criativo', subtipo: 'texto' };
   }
   
