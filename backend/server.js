@@ -186,8 +186,11 @@ app.post('/api/orquestrador', async (req, res) => {
       });
     }
     
+    console.log('📥 Pedido recebido:', pedido);
+    
     // 1. Classificar o pedido
     const classificacao = classificarPedido(pedido);
+    console.log('🔍 Classificação:', classificacao);
     
     // 2. Executar ação apropriada
     let resultado;
